@@ -1,0 +1,44 @@
+<h2>Register New User</h2>
+
+{% if error %}
+  <p style="color: red;">{{ error }}</p>
+{% elif success %}
+  <p style="color: green;">{{ success }}</p>
+{% endif %}
+
+<form method="POST">
+  {% csrf_token %}
+
+  <!-- Username -->
+  <label>Username:</label><br>
+  <input type="text" name="username" required><br><br>
+
+  <!-- Email -->
+  <label>Email:</label><br>
+  <input type="email" name="email" required><br><br>
+
+  <!-- Password -->
+  <label>Password:</label><br>
+  <input type="password" name="password" required><br><br>
+
+  <!-- Role Dropdown -->
+<label>Role:</label><br>
+<select name="role" required>
+  <option value="">-- Select Role --</option>
+  {% for role in allowed_roles %}
+    <option value="{{ role }}">{{ role|title }}</option>
+  {% endfor %}
+</select><br><br>
+
+
+  <!-- School Dropdown -->
+  <label>School:</label><br>
+  <select name="school_id" required>
+    <option value="">-- Select School --</option>
+    {% for school in schools %}
+      <option value="{{ school.id }}">{{ school.name }}</option>
+    {% endfor %}
+  </select><br><br>
+
+  <button type="submit">Register</button>
+</form>

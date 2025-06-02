@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SchoolConnect - Student Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .sidebar {
+            transition: all 0.3s;
+        }
+        .sidebar-collapsed {
+            width: 70px;
+        }
+        .sidebar-expanded {
+            width: 250px;
+        }
+        .main-content {
+            transition: margin-left 0.3s;
+        }
+        .chat-message:hover .message-actions {
+            opacity: 1;
+        }
+        .message-actions {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .video-thumbnail:hover .play-icon {
+            transform: scale(1.2);
+        }
+        .play-icon {
+            transition: transform 0.2s;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar sidebar-expanded bg-indigo-800 text-white flex flex-col">
+            <div class="p-4 flex items-center justify-between border-b border-indigo-700">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-graduation-cap text-2xl"></i>
+                    <span id="logo-text" class="text-xl font-bold">SchoolConnect</span>
+                </div>
+                <button id="toggle-sidebar" class="text-white focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <div class="p-4 flex items-center space-x-3 border-b border-indigo-700">
+                <div class="relative">
+                    <img src="https://randomuser.me/api/portraits/lego/1.jpg" alt="Profile" class="w-10 h-10 rounded-full border-2 border-white">
+                    <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
+                </div>
+                <div id="user-info">
+                    <p class="font-medium">John Student</p>
+                    <p class="text-xs text-indigo-300">Grade 10</p>
+                </div>
+            </div>
+
+            <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+                <a href="#" class="flex items-center space-x-3 p-2 rounded-lg bg-indigo-700 text-white">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-700 text-white">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                    <span class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">3</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-700 text-white">
+                    <i class="fas fa-comments"></i>
+                    <span>Class Chat</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-700 text-white">
+                    <i class="fas fa-sticky-note"></i>
+                    <span>Notes</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-700 text-white">
+                    <i class="fas fa-video"></i>
+                    <span>Lecture Videos</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-700 text-white">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Schedule</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-700 text-white">
+                    <i class="fas fa-book"></i>
+                    <span>Courses</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-700 text-white">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Grades</span>
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-indigo-700">
+                <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-700 text-white">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-700 text-white">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="main-content" class="main-content flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm p-4 flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
+
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                        </button>
+                    </div>
+
+                    <div class="relative">
+                        <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
+                            <img src="https://randomuser.me/api/portraits/lego/1.jpg" alt="Profile" class="w-8 h-8 rounded-full">
+                            <span class="hidden md:inline text-gray-700">John</span>
+                            <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="flex-1 overflow-y-auto p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left Column -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Announcements -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-xl font-bold text-gray-800">Announcements</h2>
+                                <button class="text-indigo-600 hover:text-indigo-800">View All</button>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="p-4 border-l-4 border-indigo-500 bg-indigo-50 rounded-r-lg">
+                                    <div class="flex items-start space-x-3">
+                                        <div class="flex-shrink-0">
+                                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Principal" class="w-10 h-10 rounded-full">
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center space-x-2">
+                                                <h3 class="font-medium text-gray-800">Principal Smith</h3>
+                                                <span class="text-xs text-gray-500">Today, 10:30 AM</span>
+                                            </div>
+                                            <p class="text-gray-700 mt-1">Reminder: Parent-Teacher meetings scheduled for Friday. Please check your assigned time slots.</p>
+                                            <div class="mt-2 flex space-x-3">
+                                                <button class="text-indigo-600 hover:text-indigo-800 text-sm flex items-center">
+                                                    <i class="fas fa-reply mr-1"></i> Reply
+                                                </button>
+                                                <button class="text-gray-500 hover:text-gray-700 text-sm flex items-center">
+                                                    <i class="fas fa-share mr-1"></i> Forward
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="p-4 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg">
+                                    <div class="flex items-start space-x-3">
+                                        <div class="flex-shrink-0">
+                                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Math Teacher" class="w-10 h-10 rounded-full">
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center space-x-2">
+                                                <h3 class="font-medium text-gray-800">Mr. Johnson (Math)</h3>
+                                                <span class="text-xs text-gray-500">Yesterday, 2:15 PM</span>
+                                            </div>
+                                            <p class="text-gray-700 mt-1">The homework assignment for Chapter 5 has been posted. Due date is next Monday.</p>
+                                            <div class="mt-2 flex space-x-3">
+                                                <button class="text-indigo-600 hover:text-indigo-800 text-sm flex items-center">
+                                                    <i class="fas fa-reply mr-1"></i> Reply
+                                                </button>
+                                                <button class="text-gray-500 hover:text-gray-700 text-sm flex items-center">
+                                                    <i class="fas fa-share mr-1"></i> Forward
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Class Chat -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-xl font-bold text-gray-800">Class Chat</h2>
+                                <div class="flex space-x-2">
+                                    <button class="p-2 rounded-full hover:bg-gray-100 text-gray-600">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <button class="p-2 rounded-full hover:bg-gray-100 text-gray-600">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="h-64 overflow-y-auto mb-4 space-y-3">
+                                <!-- Chat messages -->
+                                <div class="chat-message flex items-start space-x-2">
+                                    <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Sarah" class="w-8 h-8 rounded-full mt-1">
+                                    <div class="bg-gray-100 rounded-lg p-3 max-w-xs">
+                                        <div class="flex items-center space-x-1">
+                                            <span class="font-medium text-sm">Sarah</span>
+                                            <span class="text-xs text-gray-500">10:42 AM</span>
+                                        </div>
+                                        <p class="text-sm mt-1">Does anyone have notes from yesterday's history class? I missed it.</p>
+                                        <div class="message-actions flex space-x-2 mt-1">
+                                            <button class="text-xs text-gray-500 hover:text-indigo-600">
+                                                <i class="fas fa-reply"></i>
+                                            </button>
+                                            <button class="text-xs text-gray-500 hover:text-indigo-600">
+                                                <i class="fas fa-thumbs-up"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-message flex items-start space-x-2 justify-end">
+                                    <div class="bg-indigo-100 rounded-lg p-3 max-w-xs">
+                                        <div class="flex items-center space-x-1 justify-end">
+                                            <span class="text-xs text-gray-500">10:45 AM</span>
+                                            <span class="font-medium text-sm">You</span>
+                                        </div>
+                                        <p class="text-sm mt-1">I have them. I'll share in the notes section.</p>
+                                        <div class="message-actions flex space-x-2 mt-1 justify-end">
+                                            <button class="text-xs text-gray-500 hover:text-indigo-600">
+                                                <i class="fas fa-thumbs-up"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <img src="https://randomuser.me/api/portraits/lego/1.jpg" alt="You" class="w-8 h-8 rounded-full mt-1">
+                                </div>
+
+                                <div class="chat-message flex items-start space-x-2">
+                                    <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Mike" class="w-8 h-8 rounded-full mt-1">
+                                    <div class="bg-gray-100 rounded-lg p-3 max-w-xs">
+                                        <div class="flex items-center space-x-1">
+                                            <span class="font-medium text-sm">Mike</span>
+                                            <span class="text-xs text-gray-500">10:47 AM</span>
+                                        </div>
+                                        <p class="text-sm mt-1">Thanks! Also, don't forget about the group project meeting after school.</p>
+                                        <div class="message-actions flex space-x-2 mt-1">
+                                            <button class="text-xs text-gray-500 hover:text-indigo-600">
+                                                <i class="fas fa-reply"></i>
+                                            </button>
+                                            <button class="text-xs text-gray-500 hover:text-indigo-600">
+                                                <i class="fas fa-thumbs-up"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-2">
+                                <input type="text" placeholder="Type a message..." class="flex-1 border border-gray-300 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                <button class="p-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                                <button class="p-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300">
+                                    <i class="fas fa-paperclip"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="space-y-6">
+                        <!-- Quick Actions -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button class="flex flex-col items-center justify-center p-4 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100">
+                                    <i class="fas fa-envelope text-2xl mb-2"></i>
+                                    <span class="text-sm">New Message</span>
+                                </button>
+                                <button class="flex flex-col items-center justify-center p-4 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100">
+                                    <i class="fas fa-sticky-note text-2xl mb-2"></i>
+                                    <span class="text-sm">Add Note</span>
+                                </button>
+                                <button class="flex flex-col items-center justify-center p-4 rounded-lg bg-green-50 text-green-700 hover:bg-green-100">
+                                    <i class="fas fa-video text-2xl mb-2"></i>
+                                    <span class="text-sm">Upload Video</span>
+                                </button>
+                                <button class="flex flex-col items-center justify-center p-4 rounded-lg bg-purple-50 text-purple-700 hover:bg-purple-100">
+                                    <i class="fas fa-calendar-plus text-2xl mb-2"></i>
+                                    <span class="text-sm">Add Event</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Recent Notes -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-xl font-bold text-gray-800">Recent Notes</h2>
+                                <button class="text-indigo-600 hover:text-indigo-800">View All</button>
+                            </div>
+
+                            <div class="space-y-3">
+                                <div class="p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="font-medium text-gray-800">History - World War II</h3>
+                                        <span class="text-xs text-gray-500">2 days ago</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mt-1 truncate">Key events and timelines from the World War II chapter...</p>
+                                    <div class="mt-2 flex space-x-2">
+                                        <span class="text-xs px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full">History</span>
+                                        <button class="text-xs text-gray-500 hover:text-indigo-600 ml-auto">
+                                            <i class="fas fa-share"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="font-medium text-gray-800">Math - Quadratic Equations</h3>
+                                        <span class="text-xs text-gray-500">4 days ago</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mt-1 truncate">Formulas and example problems solved in class...</p>
+                                    <div class="mt-2 flex space-x-2">
+                                        <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">Math</span>
+                                        <button class="text-xs text-gray-500 hover:text-indigo-600 ml-auto">
+                                            <i class="fas fa-share"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="font-medium text-gray-800">Science - Photosynthesis</h3>
+                                        <span class="text-xs text-gray-500">1 week ago</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mt-1 truncate">Diagram and explanation of the photosynthesis process...</p>
+                                    <div class="mt-2 flex space-x-2">
+                                        <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">Science</span>
+                                        <button class="text-xs text-gray-500 hover:text-indigo-600 ml-auto">
+                                            <i class="fas fa-share"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="mt-4 w-full py-2 border border-dashed border-gray-300 rounded-lg text-gray-500 hover:text-indigo-600 hover:border-indigo-300">
+                                <i class="fas fa-plus mr-1"></i> Add New Note
+                            </button>
+                        </div>
+
+                        <!-- Lecture Videos -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-xl font-bold text-gray-800">Lecture Videos</h2>
+                                <button class="text-indigo-600 hover:text-indigo-800">View All</button>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="video-thumbnail relative rounded-lg overflow-hidden bg-gray-200 h-32">
+                                    <img src="https://img.freepik.com/free-photo/empty-blackboard-classroom_23-2149637065.jpg" alt="Math Lecture" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                                        <div class="play-icon bg-white bg-opacity-80 rounded-full w-12 h-12 flex items-center justify-center">
+                                            <i class="fas fa-play text-indigo-600"></i>
+                                        </div>
+                                    </div>
+                                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3">
+                                        <h3 class="text-white text-sm font-medium">Math - Quadratic Equations</h3>
+                                        <p class="text-xs text-gray-300">Mr. Johnson • 45 min</p>
+                                    </div>
+                                </div>
+
+                                <div class="video-thumbnail relative rounded-lg overflow-hidden bg-gray-200 h-32">
+                                    <img src="https://img.freepik.com/free-photo/high-angle-shot-empty-classroom-desks-chairs_181624-34600.jpg" alt="History Lecture" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                                        <div class="play-icon bg-white bg-opacity-80 rounded-full w-12 h-12 flex items-center justify-center">
+                                            <i class="fas fa-play text-indigo-600"></i>
+                                        </div>
+                                    </div>
+                                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3">
+                                        <h3 class="text-white text-sm font-medium">History - World War II</h3>
+                                        <p class="text-xs text-gray-300">Ms. Davis • 38 min</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="mt-4 w-full py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center justify-center">
+                                <i class="fas fa-upload mr-2"></i> Upload Video
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar
+        const toggleSidebar = document.getElementById('toggle-sidebar');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        const logoText = document.getElementById('logo-text');
+        const userInfo = document.getElementById('user-info');
+
+        toggleSidebar.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-collapsed');
+            sidebar.classList.toggle('sidebar-expanded');
+            mainContent.classList.toggle('ml-20');
+
+            // Toggle text elements when collapsed
+            if (sidebar.classList.contains('sidebar-collapsed')) {
+                logoText.classList.add('hidden');
+                userInfo.classList.add('hidden');
+                document.querySelectorAll('nav a span').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('nav a .rounded-full').forEach(el => el.classList.add('hidden'));
+            } else {
+                logoText.classList.remove('hidden');
+                userInfo.classList.remove('hidden');
+                document.querySelectorAll('nav a span').forEach(el => el.classList.remove('hidden'));
+                document.querySelectorAll('nav a .rounded-full').forEach(el => el.classList.remove('hidden'));
+            }
+        });
+
+        // Simulate uploading a video
+        const uploadBtn = document.querySelector('.bg-indigo-600');
+        uploadBtn.addEventListener('click', () => {
+            alert('Video upload feature would open a file dialog here to select and upload lecture videos.');
+        });
+
+        // Simulate clicking on a video
+        document.querySelectorAll('.video-thumbnail').forEach(thumbnail => {
+            thumbnail.addEventListener('click', () => {
+                alert('This would open a video player to watch the lecture recording.');
+            });
+        });
+    </script>
+</body>
+</html>
